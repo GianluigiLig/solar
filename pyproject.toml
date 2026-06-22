@@ -8,8 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
 dependencies = [
-    # Replace NOME_AZIENDA with your GitHub organization/user before publishing/locking.
-    "data-platform @ git+ssh://git@github.com/NOME_AZIENDA/data_platform.git@v0.1.0",
+    "data-platform @ git+https://github.com/GianluigiLig/data_platform.git@v0.1.0",
 
     "pandas>=2.0.0",
     "numpy>=1.26.0",
