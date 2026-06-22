@@ -1,0 +1,32 @@
+[project]
+name = "solar"
+version = "0.1.0"
+description = "Solar data processing package with source adapters, transformations, gold datasets and KPI calculations."
+authors = [
+    { name = "Your Team" }
+]
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    # Replace NOME_AZIENDA with your GitHub organization/user before publishing/locking.
+    "data-platform @ git+ssh://git@github.com/NOME_AZIENDA/data_platform.git@v0.1.0",
+
+    "pandas>=2.0.0",
+    "numpy>=1.26.0",
+    "requests>=2.31.0",
+    "pyyaml>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "python-dateutil>=2.8.2"
+]
+
+[tool.poetry]
+packages = [
+    { include = "solar" }
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
