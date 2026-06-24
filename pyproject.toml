@@ -1,7 +1,7 @@
 [project]
 name = "solar"
-version = "0.1.0"
-description = "Solar data processing package with source adapters, transformations, gold datasets and KPI calculations."
+version = "0.1.1"
+description = "Solar data processing package with source adapters, silver transformations and KPI calculations."
 authors = [
     { name = "Your Team" }
 ]

@@ -8,10 +8,9 @@ import pandas as pd
 
 from data_platform.datalake.lake import DataLake, DEFAULT_LAKE_ROOT
 from data_platform.datalake.storage import GCSObjectStorage, LocalObjectStorage, ObjectStorage
-from data_platform.pipelines import BronzePipeline, GoldPipeline, SilverPipeline
+from data_platform.pipelines import BronzePipeline, SilverPipeline
 from data_platform.utils.diagnostics import ConfigurationError, get_logger
 from solar.config import build_solar_context, load_solar_config
-from solar.domain.gold import SolarGoldProcessor
 from solar.domain.kpi import SolarKpiProcessor
 from solar.sources import get_source_adapter, get_source_client
 
@@ -42,10 +41,11 @@ def run_solar_pipeline(
     gcs_client=None,
     execution_date: str | date | datetime | None = None,
 ) -> dict[str, dict]:
-    """Run the solar medallion flow using one YAML file.
+    """Run source-driven bronze/silver stages using one YAML file.
 
-    Bronze/silver/gold are generic pipelines from ``data_platform``. The solar
-    package injects the source adapter and the ``SolarGoldProcessor``.
+    The gold enrichment is intentionally not implemented in this package.
+    Project-specific gold processors should live in the orchestrating DAG/job
+    and can use the generic ``data_platform.GoldPipeline`` directly.
     """
     normalized_stages = [stage.lower() for stage in stages]
     config = load_solar_config(config_path, source=source)
@@ -65,7 +65,10 @@ def run_solar_pipeline(
         results["silver"] = SilverPipeline(lake).run(context=context, adapter=adapter)
 
     if "gold" in normalized_stages:
-        results["gold"] = GoldPipeline(lake).run(context=context, processor=SolarGoldProcessor(adapter))
+        raise ConfigurationError(
+            "Gold stage is project-specific and must be implemented in the DAG/job. "
+            "Use data_platform.pipelines.GoldPipeline with a local processor."
+        )
 
     return results
 
