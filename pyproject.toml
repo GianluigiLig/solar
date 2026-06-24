@@ -1,6 +1,6 @@
 [project]
 name = "solar"
-version = "0.1.1"
+version = "0.1.2"
 description = "Solar data processing package with source adapters, silver transformations and KPI calculations."
 authors = [
     { name = "Your Team" }
@@ -8,7 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
 dependencies = [
-    "data-platform @ git+https://github.com/GianluigiLig/data_platform.git@v0.1.0",
+    "data-platform @ git+https://github.com/GianluigiLig/data_platform.git@v0.1.1",
 
     "pandas>=2.0.0",
     "numpy>=1.26.0",

@@ -22,6 +22,12 @@ def make_device_time_grid(timestamps: Iterable[Any], device_names: str | Iterabl
 
 
 def pivot_device_measurements(df: pd.DataFrame, value_columns: list[str]) -> pd.DataFrame:
+    """Pivot long silver data to the wide shape consumed by gold.
+
+    This intentionally mirrors the historical gold pipeline behavior:
+    ``pivot_table(..., aggfunc="first")`` is used so duplicated
+    ``datetime/device`` records keep the first value produced by silver.
+    """
     if df.empty:
         raise EmptyDataFrameError("DataFrame is empty")
     required_columns = [RAW.DATETIME, RAW.DEVICE_NAME] + value_columns
@@ -31,8 +37,13 @@ def pivot_device_measurements(df: pd.DataFrame, value_columns: list[str]) -> pd.
     df_work = df[required_columns].copy()
     df_work[RAW.DATETIME] = pd.to_datetime(df_work[RAW.DATETIME], utc=True, errors="coerce")
     df_work = df_work.dropna(subset=[RAW.DATETIME, RAW.DEVICE_NAME])
-    df_work = df_work.drop_duplicates(subset=[RAW.DATETIME, RAW.DEVICE_NAME], keep="last")
-    df_pivot = df_work.pivot(index=RAW.DATETIME, columns=RAW.DEVICE_NAME, values=value_columns)
+
+    df_pivot = df_work.pivot_table(
+        index=RAW.DATETIME,
+        columns=RAW.DEVICE_NAME,
+        values=value_columns,
+        aggfunc="first",
+    )
     if isinstance(df_pivot.columns, pd.MultiIndex):
         df_pivot.columns = [f"{metric}_{device}" for metric, device in df_pivot.columns]
     else:
